@@ -7,7 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Check, Loader2 } from "lucide-react";
-import { categories } from "@/lib/data";
+import { categories, type Product } from "@/lib/data";
 import {
   Select,
   SelectContent,

@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -7,7 +6,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Check, Edit, Loader2, Search, Trash } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import ProductForm from "./ProductForm";
-import { products as initialProducts } from "@/lib/data";
+import { products as initialProducts, type Product } from "@/lib/data";
 
 const ProductList = () => {
   const [products, setProducts] = useState<Product[]>([]);
