@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { Check, Loader2 } from "lucide-react";
+import { Check, Loader2, Upload } from "lucide-react";
 import { categories, type Product } from "@/lib/data";
 import {
   Select,
@@ -24,6 +24,7 @@ interface ProductFormProps {
 const ProductForm = ({ editProduct, onSuccess }: ProductFormProps) => {
   const isEditing = !!editProduct;
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   
   // Form state
   const [formData, setFormData] = useState({
@@ -36,6 +37,7 @@ const ProductForm = ({ editProduct, onSuccess }: ProductFormProps) => {
     featured: editProduct?.featured || false,
     fileType: editProduct?.fileType || "",
     fileSize: editProduct?.fileSize || "",
+    fileUrl: editProduct?.fileUrl || "",
   });
   
   const handleChange = (
@@ -51,6 +53,37 @@ const ProductForm = ({ editProduct, onSuccess }: ProductFormProps) => {
   
   const handleSelectChange = (value: string) => {
     setFormData((prev) => ({ ...prev, category: value }));
+  };
+  
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    
+    // Update the file information
+    setUploadedFile(file);
+    
+    // Update form data with file information
+    setFormData((prev) => ({
+      ...prev,
+      fileType: file.type,
+      fileSize: formatFileSize(file.size),
+      // In a real app, this would be a URL to the file after upload to a server or cloud storage
+      fileUrl: URL.createObjectURL(file),
+    }));
+    
+    // If it's a product image, set the image preview
+    if (file.type.startsWith('image/')) {
+      setFormData((prev) => ({
+        ...prev,
+        image: URL.createObjectURL(file),
+      }));
+    }
+  };
+  
+  const formatFileSize = (bytes: number) => {
+    if (bytes < 1024) return bytes + ' B';
+    else if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+    else return (bytes / 1048576).toFixed(1) + ' MB';
   };
   
   const handleSubmit = (e: React.FormEvent) => {
@@ -98,7 +131,9 @@ const ProductForm = ({ editProduct, onSuccess }: ProductFormProps) => {
           featured: false,
           fileType: "",
           fileSize: "",
+          fileUrl: "",
         });
+        setUploadedFile(null);
       }
       
       // Call success callback if provided
@@ -190,6 +225,37 @@ const ProductForm = ({ editProduct, onSuccess }: ProductFormProps) => {
           </div>
         </div>
         
+        {/* File upload section */}
+        <div>
+          <Label htmlFor="file">Upload Product File or Image</Label>
+          <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 mt-1 text-center">
+            <input
+              id="file"
+              type="file"
+              className="hidden"
+              onChange={handleFileChange}
+            />
+            <label htmlFor="file" className="cursor-pointer">
+              <div className="flex flex-col items-center justify-center gap-2">
+                <Upload className="h-10 w-10 text-gray-400" />
+                <span className="font-medium text-gray-600">
+                  {uploadedFile ? uploadedFile.name : 'Click to upload a file'}
+                </span>
+                {!uploadedFile && (
+                  <p className="text-sm text-gray-500">
+                    PNG, JPG, PDF, ZIP up to 10MB
+                  </p>
+                )}
+                {uploadedFile && (
+                  <div className="text-sm text-gray-500">
+                    Type: {uploadedFile.type || 'Unknown'} | Size: {formatFileSize(uploadedFile.size)}
+                  </div>
+                )}
+              </div>
+            </label>
+          </div>
+        </div>
+        
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <Label htmlFor="fileType">File Type</Label>
@@ -213,6 +279,19 @@ const ProductForm = ({ editProduct, onSuccess }: ProductFormProps) => {
             />
           </div>
         </div>
+        
+        {uploadedFile && formData.fileUrl && formData.fileType.startsWith('image/') && (
+          <div className="mt-4">
+            <Label>Preview</Label>
+            <div className="border rounded-md overflow-hidden mt-1 h-48 flex items-center justify-center">
+              <img 
+                src={formData.fileUrl} 
+                alt="Preview" 
+                className="max-h-full max-w-full object-contain" 
+              />
+            </div>
+          </div>
+        )}
         
         <div className="flex items-center space-x-2">
           <Switch

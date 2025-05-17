@@ -9,6 +9,7 @@ export interface Product {
   featured?: boolean;
   fileType?: string;
   fileSize?: string;
+  fileUrl?: string; // Added for uploaded file URL
 }
 
 export interface CartItem extends Product {
