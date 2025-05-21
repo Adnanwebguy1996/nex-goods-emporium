@@ -21,7 +21,8 @@ export const categories = [
   "Icons",
   "Scripts",
   "Plugins",
-  "Courses",
+  "Elementor",
+  "Divi website assets",
 ];
 
 export const products: Product[] = [
