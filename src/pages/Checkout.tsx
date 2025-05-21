@@ -13,11 +13,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ArrowLeft, CreditCard, CheckCircle } from "lucide-react";
+import { ArrowLeft, CreditCard, CheckCircle, Truck } from "lucide-react";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 const Checkout = () => {
   const [step, setStep] = useState(1);
   const [formCompleted, setFormCompleted] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState("card");
   
   // For demo purposes, we'll fake a completed checkout
   const handleSubmit = (e: React.FormEvent) => {
@@ -85,33 +87,68 @@ const Checkout = () => {
                       <Label htmlFor="email">Email Address</Label>
                       <Input id="email" type="email" required />
                     </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="address">Delivery Address</Label>
+                      <Input id="address" required placeholder="Enter your full address" />
+                    </div>
                   </div>
                   
                   <div className="bg-white p-6 rounded-lg border space-y-6">
                     <div className="flex items-center">
                       <CreditCard className="h-5 w-5 mr-2 text-nex-600" />
-                      <h2 className="text-xl font-semibold">Payment Details</h2>
+                      <h2 className="text-xl font-semibold">Payment Method</h2>
                     </div>
+
+                    <RadioGroup defaultValue="card" value={paymentMethod} onValueChange={setPaymentMethod} className="gap-4">
+                      <div className="flex items-center space-x-2 border p-4 rounded-lg">
+                        <RadioGroupItem value="card" id="payment-card" />
+                        <Label htmlFor="payment-card" className="flex items-center gap-2 cursor-pointer">
+                          <CreditCard className="h-4 w-4" />
+                          <span>Credit/Debit Card</span>
+                        </Label>
+                      </div>
+                      
+                      <div className="flex items-center space-x-2 border p-4 rounded-lg">
+                        <RadioGroupItem value="cod" id="payment-cod" />
+                        <Label htmlFor="payment-cod" className="flex items-center gap-2 cursor-pointer">
+                          <Truck className="h-4 w-4" />
+                          <span>Cash on Delivery (COD)</span>
+                        </Label>
+                      </div>
+                    </RadioGroup>
                     
-                    <div className="space-y-2">
-                      <Label htmlFor="cardNumber">Card Number</Label>
-                      <Input id="cardNumber" placeholder="1234 5678 9012 3456" required />
-                    </div>
-                    
-                    <div className="grid grid-cols-3 gap-4">
-                      <div className="space-y-2 col-span-1">
-                        <Label htmlFor="expiryDate">Expiry Date</Label>
-                        <Input id="expiryDate" placeholder="MM/YY" required />
+                    {paymentMethod === "card" && (
+                      <div className="space-y-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="cardNumber">Card Number</Label>
+                          <Input id="cardNumber" placeholder="1234 5678 9012 3456" required={paymentMethod === "card"} />
+                        </div>
+                        
+                        <div className="grid grid-cols-3 gap-4">
+                          <div className="space-y-2 col-span-1">
+                            <Label htmlFor="expiryDate">Expiry Date</Label>
+                            <Input id="expiryDate" placeholder="MM/YY" required={paymentMethod === "card"} />
+                          </div>
+                          <div className="space-y-2 col-span-1">
+                            <Label htmlFor="cvc">CVC</Label>
+                            <Input id="cvc" placeholder="123" required={paymentMethod === "card"} />
+                          </div>
+                          <div className="space-y-2 col-span-1">
+                            <Label htmlFor="zipCode">Zip Code</Label>
+                            <Input id="zipCode" required={paymentMethod === "card"} />
+                          </div>
+                        </div>
                       </div>
-                      <div className="space-y-2 col-span-1">
-                        <Label htmlFor="cvc">CVC</Label>
-                        <Input id="cvc" placeholder="123" required />
+                    )}
+
+                    {paymentMethod === "cod" && (
+                      <div className="bg-gray-50 p-4 rounded-lg">
+                        <p className="text-sm text-muted-foreground">
+                          Pay with cash upon delivery. Please have the exact amount ready when your order arrives.
+                        </p>
                       </div>
-                      <div className="space-y-2 col-span-1">
-                        <Label htmlFor="zipCode">Zip Code</Label>
-                        <Input id="zipCode" required />
-                      </div>
-                    </div>
+                    )}
                   </div>
                   
                   <Button 
@@ -177,6 +214,10 @@ const Checkout = () => {
                     <span>customer@example.com</span>
                   </div>
                   <div className="flex justify-between">
+                    <span className="font-medium">Payment Method:</span>
+                    <span>{paymentMethod === "cod" ? "Cash on Delivery" : "Credit Card"}</span>
+                  </div>
+                  <div className="flex justify-between">
                     <span className="font-medium">Total:</span>
                     <span>$98.98</span>
                   </div>
@@ -184,8 +225,10 @@ const Checkout = () => {
               </div>
               
               <p className="mb-6">
-                You will receive an email confirmation shortly with your order details
-                and download instructions.
+                {paymentMethod === "cod" 
+                  ? "You will receive an email confirmation shortly with your order details. Please have the exact payment amount ready at delivery."
+                  : "You will receive an email confirmation shortly with your order details and download instructions."
+                }
               </p>
               
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
