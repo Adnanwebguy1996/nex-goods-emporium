@@ -1,4 +1,3 @@
-
 export interface Product {
   id: string;
   title: string;
@@ -22,7 +21,6 @@ export const categories = [
   "Icons",
   "Scripts",
   "Plugins",
-  "Ebooks",
   "Courses",
 ];
 
