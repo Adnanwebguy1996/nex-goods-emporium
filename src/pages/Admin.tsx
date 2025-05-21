@@ -1,13 +1,15 @@
 
 import { useState, useEffect } from "react";
-import { Navigate } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
 import ProductForm from "@/components/ProductForm";
 import ProductList from "@/components/ProductList";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { LogIn, Lock } from "lucide-react";
 
 // Mock authentication - in a real app, use proper auth like Supabase
 const AdminAuth = () => {
@@ -33,57 +35,74 @@ const AdminAuth = () => {
   };
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center p-4">
-      <div className="w-full max-w-md space-y-8">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold">Admin Login</h1>
-          <p className="text-muted-foreground mt-2">Sign in to manage your products</p>
-        </div>
-        
-        <form onSubmit={handleLogin} className="space-y-4">
-          <div>
-            <label htmlFor="username" className="block text-sm font-medium">
-              Username
-            </label>
-            <input
-              id="username"
-              type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              className="mt-1 block w-full rounded-md border border-input bg-background px-3 py-2"
-              required
-            />
-          </div>
-          
-          <div>
-            <label htmlFor="password" className="block text-sm font-medium">
-              Password
-            </label>
-            <input
-              id="password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="mt-1 block w-full rounded-md border border-input bg-background px-3 py-2"
-              required
-            />
-          </div>
-          
-          <Button 
-            type="submit" 
-            className="w-full bg-nex-600 hover:bg-nex-700" 
-            disabled={isLoggingIn}
-          >
-            {isLoggingIn ? "Signing in..." : "Sign in"}
-          </Button>
-        </form>
-        
-        <div className="text-center text-sm">
-          <p className="text-muted-foreground">
-            Demo credentials: admin / password
-          </p>
-        </div>
+    <div className="min-h-screen flex flex-col">
+      <Navbar />
+      <div className="flex flex-1 items-center justify-center p-4 bg-gray-50">
+        <Card className="w-full max-w-md">
+          <CardHeader>
+            <div className="flex items-center justify-center mb-4">
+              <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
+                <Lock className="h-6 w-6 text-primary" />
+              </div>
+            </div>
+            <CardTitle className="text-2xl text-center">Admin Login</CardTitle>
+            <CardDescription className="text-center">
+              Enter your credentials to access the admin panel
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleLogin} className="space-y-4">
+              <div className="space-y-2">
+                <label htmlFor="username" className="text-sm font-medium">
+                  Username
+                </label>
+                <Input
+                  id="username"
+                  type="text"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  placeholder="Enter admin username"
+                  required
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <label htmlFor="password" className="text-sm font-medium">
+                  Password
+                </label>
+                <Input
+                  id="password"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Enter password"
+                  required
+                />
+              </div>
+              
+              <Button 
+                type="submit" 
+                className="w-full"
+                disabled={isLoggingIn}
+              >
+                {isLoggingIn ? (
+                  "Signing in..."
+                ) : (
+                  <>
+                    <LogIn className="mr-2 h-4 w-4" /> Sign in
+                  </>
+                )}
+              </Button>
+            </form>
+          </CardContent>
+          <CardFooter>
+            <p className="text-xs text-center text-muted-foreground w-full">
+              Demo credentials: admin / password
+            </p>
+          </CardFooter>
+        </Card>
       </div>
+      <Footer />
     </div>
   );
 };

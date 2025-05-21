@@ -1,3 +1,4 @@
+
 export interface Product {
   id: string;
   title: string;
@@ -9,6 +10,7 @@ export interface Product {
   fileType?: string;
   fileSize?: string;
   fileUrl?: string; // Added for uploaded file URL
+  externalLink?: string; // Added for external source links
 }
 
 export interface CartItem extends Product {

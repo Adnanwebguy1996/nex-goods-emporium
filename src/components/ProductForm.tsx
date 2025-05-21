@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { Check, Loader2, Upload } from "lucide-react";
+import { Check, Loader2, Upload, Link } from "lucide-react";
 import { categories, type Product } from "@/lib/data";
 import {
   Select,
@@ -15,6 +15,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/components/ui/tabs";
 
 interface ProductFormProps {
   editProduct?: Product;
@@ -25,6 +31,9 @@ const ProductForm = ({ editProduct, onSuccess }: ProductFormProps) => {
   const isEditing = !!editProduct;
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
+  const [activeTab, setActiveTab] = useState<string>(
+    editProduct?.externalLink ? "external" : "upload"
+  );
   
   // Form state
   const [formData, setFormData] = useState({
@@ -38,6 +47,7 @@ const ProductForm = ({ editProduct, onSuccess }: ProductFormProps) => {
     fileType: editProduct?.fileType || "",
     fileSize: editProduct?.fileSize || "",
     fileUrl: editProduct?.fileUrl || "",
+    externalLink: editProduct?.externalLink || "",
   });
   
   const handleChange = (
@@ -96,6 +106,35 @@ const ProductForm = ({ editProduct, onSuccess }: ProductFormProps) => {
       setIsSubmitting(false);
       return;
     }
+
+    // Validate either file or external link based on active tab
+    if (activeTab === "upload" && !formData.fileUrl && !uploadedFile) {
+      toast.error("Please upload a file or provide an external link");
+      setIsSubmitting(false);
+      return;
+    }
+
+    if (activeTab === "external" && !formData.externalLink) {
+      toast.error("Please provide an external link");
+      setIsSubmitting(false);
+      return;
+    }
+    
+    // If external link is active, clear file data
+    if (activeTab === "external") {
+      setFormData(prev => ({
+        ...prev,
+        fileUrl: "",
+        fileType: "",
+        fileSize: ""
+      }));
+    } else {
+      // If upload is active, clear external link
+      setFormData(prev => ({
+        ...prev,
+        externalLink: ""
+      }));
+    }
     
     // Save to localStorage (in a real app, this would save to a database)
     try {
@@ -132,8 +171,10 @@ const ProductForm = ({ editProduct, onSuccess }: ProductFormProps) => {
           fileType: "",
           fileSize: "",
           fileUrl: "",
+          externalLink: "",
         });
         setUploadedFile(null);
+        setActiveTab("upload");
       }
       
       // Call success callback if provided
@@ -225,73 +266,106 @@ const ProductForm = ({ editProduct, onSuccess }: ProductFormProps) => {
           </div>
         </div>
         
-        {/* File upload section */}
-        <div>
-          <Label htmlFor="file">Upload Product File or Image</Label>
-          <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 mt-1 text-center">
-            <input
-              id="file"
-              type="file"
-              className="hidden"
-              onChange={handleFileChange}
-            />
-            <label htmlFor="file" className="cursor-pointer">
-              <div className="flex flex-col items-center justify-center gap-2">
-                <Upload className="h-10 w-10 text-gray-400" />
-                <span className="font-medium text-gray-600">
-                  {uploadedFile ? uploadedFile.name : 'Click to upload a file'}
-                </span>
-                {!uploadedFile && (
-                  <p className="text-sm text-gray-500">
-                    PNG, JPG, PDF, ZIP up to 10MB
-                  </p>
-                )}
-                {uploadedFile && (
-                  <div className="text-sm text-gray-500">
-                    Type: {uploadedFile.type || 'Unknown'} | Size: {formatFileSize(uploadedFile.size)}
+        {/* File upload / External link tabs */}
+        <div className="space-y-4 mt-4">
+          <Label>Product Delivery Method</Label>
+          <Tabs
+            value={activeTab}
+            onValueChange={setActiveTab}
+            className="w-full"
+          >
+            <TabsList className="grid grid-cols-2 mb-4">
+              <TabsTrigger value="upload">Upload File</TabsTrigger>
+              <TabsTrigger value="external">External Link</TabsTrigger>
+            </TabsList>
+            
+            <TabsContent value="upload" className="space-y-4">
+              <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 mt-1 text-center">
+                <input
+                  id="file"
+                  type="file"
+                  className="hidden"
+                  onChange={handleFileChange}
+                />
+                <label htmlFor="file" className="cursor-pointer">
+                  <div className="flex flex-col items-center justify-center gap-2">
+                    <Upload className="h-10 w-10 text-gray-400" />
+                    <span className="font-medium text-gray-600">
+                      {uploadedFile ? uploadedFile.name : 'Click to upload a file'}
+                    </span>
+                    {!uploadedFile && (
+                      <p className="text-sm text-gray-500">
+                        PNG, JPG, PDF, ZIP up to 10MB
+                      </p>
+                    )}
+                    {uploadedFile && (
+                      <div className="text-sm text-gray-500">
+                        Type: {uploadedFile.type || 'Unknown'} | Size: {formatFileSize(uploadedFile.size)}
+                      </div>
+                    )}
                   </div>
-                )}
+                </label>
               </div>
-            </label>
-          </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="fileType">File Type</Label>
+                  <Input
+                    id="fileType"
+                    name="fileType"
+                    value={formData.fileType}
+                    onChange={handleChange}
+                    placeholder="PDF, ZIP, PSD, etc."
+                  />
+                </div>
+                
+                <div>
+                  <Label htmlFor="fileSize">File Size</Label>
+                  <Input
+                    id="fileSize"
+                    name="fileSize"
+                    value={formData.fileSize}
+                    onChange={handleChange}
+                    placeholder="10MB"
+                  />
+                </div>
+              </div>
+              
+              {uploadedFile && formData.fileUrl && formData.fileType.startsWith('image/') && (
+                <div className="mt-4">
+                  <Label>Preview</Label>
+                  <div className="border rounded-md overflow-hidden mt-1 h-48 flex items-center justify-center">
+                    <img 
+                      src={formData.fileUrl} 
+                      alt="Preview" 
+                      className="max-h-full max-w-full object-contain" 
+                    />
+                  </div>
+                </div>
+              )}
+            </TabsContent>
+            
+            <TabsContent value="external" className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="externalLink">External Download Link</Label>
+                <div className="relative">
+                  <Link className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-500" />
+                  <Input
+                    id="externalLink"
+                    name="externalLink"
+                    value={formData.externalLink}
+                    onChange={handleChange}
+                    placeholder="https://example.com/your-download-link"
+                    className="pl-10"
+                  />
+                </div>
+                <p className="text-sm text-muted-foreground">
+                  Provide a direct link to your product that customers can access after purchase
+                </p>
+              </div>
+            </TabsContent>
+          </Tabs>
         </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <Label htmlFor="fileType">File Type</Label>
-            <Input
-              id="fileType"
-              name="fileType"
-              value={formData.fileType}
-              onChange={handleChange}
-              placeholder="PDF, ZIP, PSD, etc."
-            />
-          </div>
-          
-          <div>
-            <Label htmlFor="fileSize">File Size</Label>
-            <Input
-              id="fileSize"
-              name="fileSize"
-              value={formData.fileSize}
-              onChange={handleChange}
-              placeholder="10MB"
-            />
-          </div>
-        </div>
-        
-        {uploadedFile && formData.fileUrl && formData.fileType.startsWith('image/') && (
-          <div className="mt-4">
-            <Label>Preview</Label>
-            <div className="border rounded-md overflow-hidden mt-1 h-48 flex items-center justify-center">
-              <img 
-                src={formData.fileUrl} 
-                alt="Preview" 
-                className="max-h-full max-w-full object-contain" 
-              />
-            </div>
-          </div>
-        )}
         
         <div className="flex items-center space-x-2">
           <Switch

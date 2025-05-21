@@ -1,9 +1,11 @@
+
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Check, Edit, Loader2, Search, Trash } from "lucide-react";
+import { Check, Edit, Link, Loader2, Search, Trash } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import ProductForm from "./ProductForm";
 import { products as initialProducts, type Product } from "@/lib/data";
@@ -128,6 +130,7 @@ const ProductList = () => {
                 <TableHead>Product</TableHead>
                 <TableHead>Category</TableHead>
                 <TableHead>Price</TableHead>
+                <TableHead>Type</TableHead>
                 <TableHead>Featured</TableHead>
                 <TableHead className="text-right">Actions</TableHead>
               </TableRow>
@@ -154,6 +157,18 @@ const ProductList = () => {
                   </TableCell>
                   <TableCell>{product.category}</TableCell>
                   <TableCell>${product.price.toFixed(2)}</TableCell>
+                  <TableCell>
+                    {product.externalLink ? (
+                      <Badge variant="outline" className="flex items-center gap-1">
+                        <Link className="h-3 w-3" />
+                        External
+                      </Badge>
+                    ) : product.fileUrl ? (
+                      <Badge variant="outline">Upload</Badge>
+                    ) : (
+                      <span className="text-muted-foreground">—</span>
+                    )}
+                  </TableCell>
                   <TableCell>
                     {product.featured ? (
                       <Check className="h-4 w-4 text-green-500" />
