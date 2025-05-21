@@ -7,9 +7,11 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { toast } from "sonner";
 import ProductForm from "@/components/ProductForm";
 import ProductList from "@/components/ProductList";
+import VisitorTracker from "@/components/VisitorTracker";
+import VisitorHeatmap from "@/components/VisitorHeatmap";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { LogIn, Lock } from "lucide-react";
+import { LogIn, Lock, Users, MapPin } from "lucide-react";
 
 // Mock authentication - in a real app, use proper auth like Supabase
 const AdminAuth = () => {
@@ -136,7 +138,7 @@ const Admin = () => {
             <div>
               <h1 className="text-3xl font-bold">Admin Dashboard</h1>
               <p className="text-muted-foreground mt-1">
-                Manage your product catalog
+                Manage your product catalog and monitor visitor activity
               </p>
             </div>
             <Button
@@ -155,6 +157,12 @@ const Admin = () => {
             <TabsList className="mb-8">
               <TabsTrigger value="products">Products</TabsTrigger>
               <TabsTrigger value="add">Add Product</TabsTrigger>
+              <TabsTrigger value="visitors" className="flex items-center gap-1">
+                <Users className="h-4 w-4" /> Live Visitors
+              </TabsTrigger>
+              <TabsTrigger value="heatmap" className="flex items-center gap-1">
+                <MapPin className="h-4 w-4" /> Activity Heatmap
+              </TabsTrigger>
             </TabsList>
             
             <TabsContent value="products" className="space-y-4">
@@ -163,6 +171,14 @@ const Admin = () => {
             
             <TabsContent value="add">
               <ProductForm />
+            </TabsContent>
+
+            <TabsContent value="visitors">
+              <VisitorTracker />
+            </TabsContent>
+
+            <TabsContent value="heatmap">
+              <VisitorHeatmap />
             </TabsContent>
           </Tabs>
         </div>
