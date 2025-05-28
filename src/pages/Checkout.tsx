@@ -13,7 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ArrowLeft, CreditCard, CheckCircle, Truck } from "lucide-react";
+import { ArrowLeft, CreditCard, CheckCircle, Truck, Smartphone } from "lucide-react";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 const Checkout = () => {
@@ -110,6 +110,14 @@ const Checkout = () => {
                       </div>
                       
                       <div className="flex items-center space-x-2 border p-4 rounded-lg">
+                        <RadioGroupItem value="telenor" id="payment-telenor" />
+                        <Label htmlFor="payment-telenor" className="flex items-center gap-2 cursor-pointer">
+                          <Smartphone className="h-4 w-4" />
+                          <span>Telenor Microfinance Bank</span>
+                        </Label>
+                      </div>
+                      
+                      <div className="flex items-center space-x-2 border p-4 rounded-lg">
                         <RadioGroupItem value="cod" id="payment-cod" />
                         <Label htmlFor="payment-cod" className="flex items-center gap-2 cursor-pointer">
                           <Truck className="h-4 w-4" />
@@ -142,6 +150,81 @@ const Checkout = () => {
                       </div>
                     )}
 
+                    {paymentMethod === "telenor" && (
+                      <div className="bg-blue-50 p-6 rounded-lg space-y-4">
+                        <h3 className="font-semibold text-lg text-blue-900">Telenor Microfinance Bank Payment Details</h3>
+                        
+                        <div className="bg-white p-4 rounded-lg border border-blue-200">
+                          <div className="space-y-2">
+                            <div className="flex justify-between">
+                              <span className="font-medium">Account Title:</span>
+                              <span className="text-right">NEX Digital Solutions</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span className="font-medium">Account Number:</span>
+                              <span className="text-right font-mono">03451234567</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span className="font-medium">Bank Name:</span>
+                              <span className="text-right">Telenor Microfinance Bank</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span className="font-medium">Amount to Pay:</span>
+                              <span className="text-right font-bold text-green-600">PKR 9,899</span>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="space-y-3">
+                          <h4 className="font-medium text-blue-900">Payment Instructions:</h4>
+                          <div className="space-y-2 text-sm text-gray-700">
+                            <div className="flex items-start gap-2">
+                              <span className="bg-blue-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold mt-0.5">1</span>
+                              <span>Open your Telenor Bank app or dial *345#</span>
+                            </div>
+                            <div className="flex items-start gap-2">
+                              <span className="bg-blue-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold mt-0.5">2</span>
+                              <span>Select "Send Money" or "Transfer Funds"</span>
+                            </div>
+                            <div className="flex items-start gap-2">
+                              <span className="bg-blue-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold mt-0.5">3</span>
+                              <span>Enter the account number: <strong>03451234567</strong></span>
+                            </div>
+                            <div className="flex items-start gap-2">
+                              <span className="bg-blue-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold mt-0.5">4</span>
+                              <span>Enter amount: <strong>PKR 9,899</strong></span>
+                            </div>
+                            <div className="flex items-start gap-2">
+                              <span className="bg-blue-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold mt-0.5">5</span>
+                              <span>Add reference: <strong>Order #NEX-12345</strong></span>
+                            </div>
+                            <div className="flex items-start gap-2">
+                              <span className="bg-blue-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold mt-0.5">6</span>
+                              <span>Complete the transaction and save the receipt</span>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="bg-amber-50 border border-amber-200 p-3 rounded-lg">
+                          <p className="text-sm text-amber-800">
+                            <strong>Important:</strong> After completing the payment, please email your transaction receipt to 
+                            <strong> payments@nexdigital.com</strong> or WhatsApp us at <strong>+92-300-1234567</strong> 
+                            with your order number for quick verification.
+                          </p>
+                        </div>
+
+                        <div className="space-y-2">
+                          <Label htmlFor="transactionId">Transaction ID (Required after payment)</Label>
+                          <Input 
+                            id="transactionId" 
+                            placeholder="Enter transaction ID from receipt" 
+                            required={paymentMethod === "telenor"} 
+                          />
+                          <p className="text-xs text-gray-600">You can update this after making the payment</p>
+                        </div>
+                      </div>
+                    )}
+
                     {paymentMethod === "cod" && (
                       <div className="bg-gray-50 p-4 rounded-lg">
                         <p className="text-sm text-muted-foreground">
@@ -155,7 +238,7 @@ const Checkout = () => {
                     type="submit"
                     className="w-full bg-nex-600 hover:bg-nex-700 text-lg"
                   >
-                    Complete Purchase
+                    {paymentMethod === "telenor" ? "Confirm Order (Pay via Telenor Bank)" : "Complete Purchase"}
                   </Button>
                 </form>
               </div>
@@ -215,7 +298,10 @@ const Checkout = () => {
                   </div>
                   <div className="flex justify-between">
                     <span className="font-medium">Payment Method:</span>
-                    <span>{paymentMethod === "cod" ? "Cash on Delivery" : "Credit Card"}</span>
+                    <span>
+                      {paymentMethod === "cod" ? "Cash on Delivery" : 
+                       paymentMethod === "telenor" ? "Telenor Microfinance Bank" : "Credit Card"}
+                    </span>
                   </div>
                   <div className="flex justify-between">
                     <span className="font-medium">Total:</span>
@@ -227,6 +313,8 @@ const Checkout = () => {
               <p className="mb-6">
                 {paymentMethod === "cod" 
                   ? "You will receive an email confirmation shortly with your order details. Please have the exact payment amount ready at delivery."
+                  : paymentMethod === "telenor"
+                  ? "Your order is confirmed! Please complete the payment using the Telenor Bank details provided and send us the transaction receipt for quick processing."
                   : "You will receive an email confirmation shortly with your order details and download instructions."
                 }
               </p>
