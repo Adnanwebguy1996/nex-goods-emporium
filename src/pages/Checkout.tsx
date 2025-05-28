@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
@@ -110,10 +109,10 @@ const Checkout = () => {
                       </div>
                       
                       <div className="flex items-center space-x-2 border p-4 rounded-lg">
-                        <RadioGroupItem value="telenor" id="payment-telenor" />
-                        <Label htmlFor="payment-telenor" className="flex items-center gap-2 cursor-pointer">
+                        <RadioGroupItem value="easypaisa" id="payment-easypaisa" />
+                        <Label htmlFor="payment-easypaisa" className="flex items-center gap-2 cursor-pointer">
                           <Smartphone className="h-4 w-4" />
-                          <span>Telenor Microfinance Bank</span>
+                          <span>Easypaisa Manual Payment</span>
                         </Label>
                       </div>
                       
@@ -150,66 +149,54 @@ const Checkout = () => {
                       </div>
                     )}
 
-                    {paymentMethod === "telenor" && (
-                      <div className="bg-blue-50 p-6 rounded-lg space-y-4">
-                        <h3 className="font-semibold text-lg text-blue-900">Telenor Microfinance Bank Payment Details</h3>
+                    {paymentMethod === "easypaisa" && (
+                      <div className="border-2 border-green-500 bg-green-50 p-6 rounded-lg space-y-4">
+                        <div className="flex items-center gap-2">
+                          <span className="text-2xl">💸</span>
+                          <h3 className="font-semibold text-lg text-green-800">Manual Payment Details (Easypaisa)</h3>
+                        </div>
                         
-                        <div className="bg-white p-4 rounded-lg border border-blue-200">
-                          <div className="space-y-2">
-                            <div className="flex justify-between">
-                              <span className="font-medium">Account Title:</span>
-                              <span className="text-right">NEX Digital Solutions</span>
+                        <p className="text-gray-700 leading-relaxed">
+                          We currently do not offer online payment. Please complete your payment via <strong>Easypaisa</strong> using the details below:
+                        </p>
+
+                        <div className="bg-white p-4 rounded-lg border border-green-200 space-y-3">
+                          <div className="grid grid-cols-1 gap-3 text-sm">
+                            <div className="flex items-center gap-2">
+                              <span>📛</span>
+                              <span className="font-medium">Name:</span>
+                              <span>Syed Adnan Ali Shah</span>
                             </div>
-                            <div className="flex justify-between">
-                              <span className="font-medium">Account Number:</span>
-                              <span className="text-right font-mono">03451234567</span>
+                            <div className="flex items-center gap-2">
+                              <span>📱</span>
+                              <span className="font-medium">Mobile Number:</span>
+                              <span className="font-mono">0334 1225843</span>
                             </div>
-                            <div className="flex justify-between">
-                              <span className="font-medium">Bank Name:</span>
-                              <span className="text-right">Telenor Microfinance Bank</span>
+                            <div className="flex items-center gap-2">
+                              <span>📧</span>
+                              <span className="font-medium">Email:</span>
+                              <span>adnan_shah670@hotmail.com</span>
                             </div>
-                            <div className="flex justify-between">
+                            <div className="flex items-center gap-2">
+                              <span>🏦</span>
+                              <span className="font-medium">IBAN:</span>
+                              <span className="font-mono">PK95TMFB0000000046244832</span>
+                            </div>
+                            <div className="flex items-center gap-2">
                               <span className="font-medium">Amount to Pay:</span>
-                              <span className="text-right font-bold text-green-600">PKR 9,899</span>
+                              <span className="font-bold text-green-600">PKR 9,899</span>
                             </div>
                           </div>
                         </div>
 
-                        <div className="space-y-3">
-                          <h4 className="font-medium text-blue-900">Payment Instructions:</h4>
-                          <div className="space-y-2 text-sm text-gray-700">
-                            <div className="flex items-start gap-2">
-                              <span className="bg-blue-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold mt-0.5">1</span>
-                              <span>Open your Telenor Bank app or dial *345#</span>
-                            </div>
-                            <div className="flex items-start gap-2">
-                              <span className="bg-blue-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold mt-0.5">2</span>
-                              <span>Select "Send Money" or "Transfer Funds"</span>
-                            </div>
-                            <div className="flex items-start gap-2">
-                              <span className="bg-blue-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold mt-0.5">3</span>
-                              <span>Enter the account number: <strong>03451234567</strong></span>
-                            </div>
-                            <div className="flex items-start gap-2">
-                              <span className="bg-blue-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold mt-0.5">4</span>
-                              <span>Enter amount: <strong>PKR 9,899</strong></span>
-                            </div>
-                            <div className="flex items-start gap-2">
-                              <span className="bg-blue-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold mt-0.5">5</span>
-                              <span>Add reference: <strong>Order #NEX-12345</strong></span>
-                            </div>
-                            <div className="flex items-start gap-2">
-                              <span className="bg-blue-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold mt-0.5">6</span>
-                              <span>Complete the transaction and save the receipt</span>
-                            </div>
-                          </div>
-                        </div>
+                        <p className="text-gray-700 leading-relaxed">
+                          After making the payment, kindly share a screenshot of the transaction or mention the <strong>Order ID</strong> when contacting our support.
+                        </p>
 
-                        <div className="bg-amber-50 border border-amber-200 p-3 rounded-lg">
-                          <p className="text-sm text-amber-800">
-                            <strong>Important:</strong> After completing the payment, please email your transaction receipt to 
-                            <strong> payments@nexdigital.com</strong> or WhatsApp us at <strong>+92-300-1234567</strong> 
-                            with your order number for quick verification.
+                        <div className="bg-orange-50 border border-orange-200 p-3 rounded-lg">
+                          <p className="text-sm text-orange-800 font-medium flex items-center gap-2">
+                            <span>⚠️</span>
+                            Orders will only be processed after payment is confirmed.
                           </p>
                         </div>
 
@@ -218,7 +205,7 @@ const Checkout = () => {
                           <Input 
                             id="transactionId" 
                             placeholder="Enter transaction ID from receipt" 
-                            required={paymentMethod === "telenor"} 
+                            required={paymentMethod === "easypaisa"} 
                           />
                           <p className="text-xs text-gray-600">You can update this after making the payment</p>
                         </div>
@@ -238,7 +225,7 @@ const Checkout = () => {
                     type="submit"
                     className="w-full bg-nex-600 hover:bg-nex-700 text-lg"
                   >
-                    {paymentMethod === "telenor" ? "Confirm Order (Pay via Telenor Bank)" : "Complete Purchase"}
+                    {paymentMethod === "easypaisa" ? "Confirm Order (Pay via Easypaisa)" : "Complete Purchase"}
                   </Button>
                 </form>
               </div>
@@ -300,7 +287,7 @@ const Checkout = () => {
                     <span className="font-medium">Payment Method:</span>
                     <span>
                       {paymentMethod === "cod" ? "Cash on Delivery" : 
-                       paymentMethod === "telenor" ? "Telenor Microfinance Bank" : "Credit Card"}
+                       paymentMethod === "easypaisa" ? "Easypaisa Manual Payment" : "Credit Card"}
                     </span>
                   </div>
                   <div className="flex justify-between">
@@ -313,8 +300,8 @@ const Checkout = () => {
               <p className="mb-6">
                 {paymentMethod === "cod" 
                   ? "You will receive an email confirmation shortly with your order details. Please have the exact payment amount ready at delivery."
-                  : paymentMethod === "telenor"
-                  ? "Your order is confirmed! Please complete the payment using the Telenor Bank details provided and send us the transaction receipt for quick processing."
+                  : paymentMethod === "easypaisa"
+                  ? "Your order is confirmed! Please complete the payment using the Easypaisa details provided and send us the transaction screenshot or Order ID for quick processing."
                   : "You will receive an email confirmation shortly with your order details and download instructions."
                 }
               </p>
