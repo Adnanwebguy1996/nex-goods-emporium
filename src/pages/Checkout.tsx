@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
@@ -12,13 +13,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ArrowLeft, CreditCard, CheckCircle, Truck, Smartphone } from "lucide-react";
+import { ArrowLeft, CreditCard, CheckCircle, Truck, Smartphone, Globe } from "lucide-react";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 const Checkout = () => {
   const [step, setStep] = useState(1);
   const [formCompleted, setFormCompleted] = useState(false);
-  const [paymentMethod, setPaymentMethod] = useState("card");
+  const [paymentMethod, setPaymentMethod] = useState("skrill");
   
   // For demo purposes, we'll fake a completed checkout
   const handleSubmit = (e: React.FormEvent) => {
@@ -99,12 +100,20 @@ const Checkout = () => {
                       <h2 className="text-xl font-semibold">Payment Method</h2>
                     </div>
 
-                    <RadioGroup defaultValue="card" value={paymentMethod} onValueChange={setPaymentMethod} className="gap-4">
+                    <RadioGroup defaultValue="skrill" value={paymentMethod} onValueChange={setPaymentMethod} className="gap-4">
                       <div className="flex items-center space-x-2 border p-4 rounded-lg">
-                        <RadioGroupItem value="card" id="payment-card" />
-                        <Label htmlFor="payment-card" className="flex items-center gap-2 cursor-pointer">
-                          <CreditCard className="h-4 w-4" />
-                          <span>Credit/Debit Card</span>
+                        <RadioGroupItem value="skrill" id="payment-skrill" />
+                        <Label htmlFor="payment-skrill" className="flex items-center gap-2 cursor-pointer">
+                          <Globe className="h-4 w-4" />
+                          <span>Skrill</span>
+                        </Label>
+                      </div>
+                      
+                      <div className="flex items-center space-x-2 border p-4 rounded-lg">
+                        <RadioGroupItem value="payoneer" id="payment-payoneer" />
+                        <Label htmlFor="payment-payoneer" className="flex items-center gap-2 cursor-pointer">
+                          <Globe className="h-4 w-4" />
+                          <span>Payoneer</span>
                         </Label>
                       </div>
                       
@@ -125,26 +134,98 @@ const Checkout = () => {
                       </div>
                     </RadioGroup>
                     
-                    {paymentMethod === "card" && (
-                      <div className="space-y-4">
-                        <div className="space-y-2">
-                          <Label htmlFor="cardNumber">Card Number</Label>
-                          <Input id="cardNumber" placeholder="1234 5678 9012 3456" required={paymentMethod === "card"} />
+                    {paymentMethod === "skrill" && (
+                      <div className="border-2 border-blue-500 bg-blue-50 p-6 rounded-lg space-y-4">
+                        <div className="flex items-center gap-2">
+                          <Globe className="h-6 w-6 text-blue-600" />
+                          <h3 className="font-semibold text-lg text-blue-800">Skrill Payment</h3>
                         </div>
                         
-                        <div className="grid grid-cols-3 gap-4">
-                          <div className="space-y-2 col-span-1">
-                            <Label htmlFor="expiryDate">Expiry Date</Label>
-                            <Input id="expiryDate" placeholder="MM/YY" required={paymentMethod === "card"} />
+                        <p className="text-gray-700 leading-relaxed">
+                          Please send your payment via <strong>Skrill</strong> to the following email address:
+                        </p>
+
+                        <div className="bg-white p-4 rounded-lg border border-blue-200 space-y-3">
+                          <div className="text-sm">
+                            <div className="flex items-center gap-2">
+                              <span>📧</span>
+                              <span className="font-medium">Skrill Email:</span>
+                              <span className="font-mono">nexmarketingslotion@gmail.com</span>
+                            </div>
+                            <div className="flex items-center gap-2 mt-2">
+                              <span className="font-medium">Amount to Pay:</span>
+                              <span className="font-bold text-blue-600">$98.98</span>
+                            </div>
                           </div>
-                          <div className="space-y-2 col-span-1">
-                            <Label htmlFor="cvc">CVC</Label>
-                            <Input id="cvc" placeholder="123" required={paymentMethod === "card"} />
+                        </div>
+
+                        <p className="text-gray-700 leading-relaxed">
+                          After making the payment, kindly share a screenshot of the transaction or mention the <strong>Transaction ID</strong> when contacting our support.
+                        </p>
+
+                        <div className="bg-orange-50 border border-orange-200 p-3 rounded-lg">
+                          <p className="text-sm text-orange-800 font-medium flex items-center gap-2">
+                            <span>⚠️</span>
+                            Orders will only be processed after payment is confirmed.
+                          </p>
+                        </div>
+
+                        <div className="space-y-2">
+                          <Label htmlFor="skrillTransactionId">Transaction ID (Required after payment)</Label>
+                          <Input 
+                            id="skrillTransactionId" 
+                            placeholder="Enter Skrill transaction ID" 
+                            required={paymentMethod === "skrill"} 
+                          />
+                          <p className="text-xs text-gray-600">You can update this after making the payment</p>
+                        </div>
+                      </div>
+                    )}
+
+                    {paymentMethod === "payoneer" && (
+                      <div className="border-2 border-purple-500 bg-purple-50 p-6 rounded-lg space-y-4">
+                        <div className="flex items-center gap-2">
+                          <Globe className="h-6 w-6 text-purple-600" />
+                          <h3 className="font-semibold text-lg text-purple-800">Payoneer Payment</h3>
+                        </div>
+                        
+                        <p className="text-gray-700 leading-relaxed">
+                          Please send your payment via <strong>Payoneer</strong> to the following email address:
+                        </p>
+
+                        <div className="bg-white p-4 rounded-lg border border-purple-200 space-y-3">
+                          <div className="text-sm">
+                            <div className="flex items-center gap-2">
+                              <span>📧</span>
+                              <span className="font-medium">Payoneer Email:</span>
+                              <span className="font-mono">nexmarketingslotion@gmail.com</span>
+                            </div>
+                            <div className="flex items-center gap-2 mt-2">
+                              <span className="font-medium">Amount to Pay:</span>
+                              <span className="font-bold text-purple-600">$98.98</span>
+                            </div>
                           </div>
-                          <div className="space-y-2 col-span-1">
-                            <Label htmlFor="zipCode">Zip Code</Label>
-                            <Input id="zipCode" required={paymentMethod === "card"} />
-                          </div>
+                        </div>
+
+                        <p className="text-gray-700 leading-relaxed">
+                          After making the payment, kindly share a screenshot of the transaction or mention the <strong>Transaction ID</strong> when contacting our support.
+                        </p>
+
+                        <div className="bg-orange-50 border border-orange-200 p-3 rounded-lg">
+                          <p className="text-sm text-orange-800 font-medium flex items-center gap-2">
+                            <span>⚠️</span>
+                            Orders will only be processed after payment is confirmed.
+                          </p>
+                        </div>
+
+                        <div className="space-y-2">
+                          <Label htmlFor="payoneerTransactionId">Transaction ID (Required after payment)</Label>
+                          <Input 
+                            id="payoneerTransactionId" 
+                            placeholder="Enter Payoneer transaction ID" 
+                            required={paymentMethod === "payoneer"} 
+                          />
+                          <p className="text-xs text-gray-600">You can update this after making the payment</p>
                         </div>
                       </div>
                     )}
@@ -225,7 +306,9 @@ const Checkout = () => {
                     type="submit"
                     className="w-full bg-nex-600 hover:bg-nex-700 text-lg"
                   >
-                    {paymentMethod === "easypaisa" ? "Confirm Order (Pay via Easypaisa)" : "Complete Purchase"}
+                    {paymentMethod === "easypaisa" ? "Confirm Order (Pay via Easypaisa)" : 
+                     paymentMethod === "skrill" ? "Confirm Order (Pay via Skrill)" :
+                     paymentMethod === "payoneer" ? "Confirm Order (Pay via Payoneer)" : "Complete Purchase"}
                   </Button>
                 </form>
               </div>
@@ -287,7 +370,9 @@ const Checkout = () => {
                     <span className="font-medium">Payment Method:</span>
                     <span>
                       {paymentMethod === "cod" ? "Cash on Delivery" : 
-                       paymentMethod === "easypaisa" ? "Easypaisa Manual Payment" : "Credit Card"}
+                       paymentMethod === "easypaisa" ? "Easypaisa Manual Payment" : 
+                       paymentMethod === "skrill" ? "Skrill" :
+                       paymentMethod === "payoneer" ? "Payoneer" : "Unknown"}
                     </span>
                   </div>
                   <div className="flex justify-between">
@@ -302,6 +387,10 @@ const Checkout = () => {
                   ? "You will receive an email confirmation shortly with your order details. Please have the exact payment amount ready at delivery."
                   : paymentMethod === "easypaisa"
                   ? "Your order is confirmed! Please complete the payment using the Easypaisa details provided and send us the transaction screenshot or Order ID for quick processing."
+                  : paymentMethod === "skrill"
+                  ? "Your order is confirmed! Please complete the payment via Skrill to nexmarketingslotion@gmail.com and send us the transaction screenshot or Transaction ID for quick processing."
+                  : paymentMethod === "payoneer"
+                  ? "Your order is confirmed! Please complete the payment via Payoneer to nexmarketingslotion@gmail.com and send us the transaction screenshot or Transaction ID for quick processing."
                   : "You will receive an email confirmation shortly with your order details and download instructions."
                 }
               </p>
