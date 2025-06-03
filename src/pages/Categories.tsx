@@ -168,12 +168,14 @@ const Categories = () => {
                         </div>
                       </div>
                       
-                      <Link to={`/products?category=${encodeURIComponent(category)}`}>
-                        <Button className="w-full bg-nex-600 hover:bg-nex-700 group">
-                          Browse {category}
-                          <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                        </Button>
-                      </Link>
+                      <div className="pt-4">
+                        <Link to={`/products?category=${encodeURIComponent(category)}`}>
+                          <Button className="w-full bg-nex-600 hover:bg-nex-700 group">
+                            Browse {category}
+                            <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                          </Button>
+                        </Link>
+                      </div>
                     </CardContent>
                   </Card>
                 );
@@ -238,12 +240,14 @@ const Categories = () => {
               <p className="text-xl mb-8 text-white/90">
                 Browse through our extensive collection and find exactly what you need for your next project
               </p>
-              <Link to="/products">
-                <Button size="lg" variant="outline" className="bg-white text-nex-600 hover:bg-gray-100">
-                  View All Products
-                  <ArrowRight className="ml-2 h-5 w-5" />
-                </Button>
-              </Link>
+              <div className="flex justify-center">
+                <Link to="/products">
+                  <Button size="lg" variant="outline" className="bg-white text-nex-600 hover:bg-gray-100">
+                    View All Products
+                    <ArrowRight className="ml-2 h-5 w-5" />
+                  </Button>
+                </Link>
+              </div>
             </div>
           </div>
         </section>
