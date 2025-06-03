@@ -13,13 +13,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ArrowLeft, CreditCard, CheckCircle, Truck, Smartphone, Globe } from "lucide-react";
+import { ArrowLeft, CreditCard, CheckCircle, Smartphone, Globe } from "lucide-react";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 const Checkout = () => {
   const [step, setStep] = useState(1);
   const [formCompleted, setFormCompleted] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState("skrill");
+  
+  // Cart total and conversion rate
+  const cartTotal = 98.98; // This should come from cart context/state
+  const usdToPkrRate = 100; // 1 USD = 100 PKR (approximate rate)
+  const pkrAmount = Math.round(cartTotal * usdToPkrRate);
   
   // For demo purposes, we'll fake a completed checkout
   const handleSubmit = (e: React.FormEvent) => {
@@ -124,14 +129,6 @@ const Checkout = () => {
                           <span>Easypaisa Manual Payment</span>
                         </Label>
                       </div>
-                      
-                      <div className="flex items-center space-x-2 border p-4 rounded-lg">
-                        <RadioGroupItem value="cod" id="payment-cod" />
-                        <Label htmlFor="payment-cod" className="flex items-center gap-2 cursor-pointer">
-                          <Truck className="h-4 w-4" />
-                          <span>Cash on Delivery (COD)</span>
-                        </Label>
-                      </div>
                     </RadioGroup>
                     
                     {paymentMethod === "skrill" && (
@@ -154,7 +151,7 @@ const Checkout = () => {
                             </div>
                             <div className="flex items-center gap-2 mt-2">
                               <span className="font-medium">Amount to Pay:</span>
-                              <span className="font-bold text-blue-600">$98.98</span>
+                              <span className="font-bold text-blue-600">${cartTotal.toFixed(2)}</span>
                             </div>
                           </div>
                         </div>
@@ -202,7 +199,7 @@ const Checkout = () => {
                             </div>
                             <div className="flex items-center gap-2 mt-2">
                               <span className="font-medium">Amount to Pay:</span>
-                              <span className="font-bold text-purple-600">$98.98</span>
+                              <span className="font-bold text-purple-600">${cartTotal.toFixed(2)}</span>
                             </div>
                           </div>
                         </div>
@@ -265,7 +262,11 @@ const Checkout = () => {
                             </div>
                             <div className="flex items-center gap-2">
                               <span className="font-medium">Amount to Pay:</span>
-                              <span className="font-bold text-green-600">PKR 9,899</span>
+                              <span className="font-bold text-green-600">PKR {pkrAmount.toLocaleString()}</span>
+                            </div>
+                            <div className="flex items-center gap-2 text-xs text-gray-600">
+                              <span>💱</span>
+                              <span>Exchange Rate: 1 USD = {usdToPkrRate} PKR (${cartTotal.toFixed(2)} USD)</span>
                             </div>
                           </div>
                         </div>
@@ -290,14 +291,6 @@ const Checkout = () => {
                           />
                           <p className="text-xs text-gray-600">You can update this after making the payment</p>
                         </div>
-                      </div>
-                    )}
-
-                    {paymentMethod === "cod" && (
-                      <div className="bg-gray-50 p-4 rounded-lg">
-                        <p className="text-sm text-muted-foreground">
-                          Pay with cash upon delivery. Please have the exact amount ready when your order arrives.
-                        </p>
                       </div>
                     )}
                   </div>
@@ -369,23 +362,20 @@ const Checkout = () => {
                   <div className="flex justify-between">
                     <span className="font-medium">Payment Method:</span>
                     <span>
-                      {paymentMethod === "cod" ? "Cash on Delivery" : 
-                       paymentMethod === "easypaisa" ? "Easypaisa Manual Payment" : 
+                      {paymentMethod === "easypaisa" ? "Easypaisa Manual Payment" : 
                        paymentMethod === "skrill" ? "Skrill" :
                        paymentMethod === "payoneer" ? "Payoneer" : "Unknown"}
                     </span>
                   </div>
                   <div className="flex justify-between">
                     <span className="font-medium">Total:</span>
-                    <span>$98.98</span>
+                    <span>${cartTotal.toFixed(2)}</span>
                   </div>
                 </div>
               </div>
               
               <p className="mb-6">
-                {paymentMethod === "cod" 
-                  ? "You will receive an email confirmation shortly with your order details. Please have the exact payment amount ready at delivery."
-                  : paymentMethod === "easypaisa"
+                {paymentMethod === "easypaisa"
                   ? "Your order is confirmed! Please complete the payment using the Easypaisa details provided and send us the transaction screenshot or Order ID for quick processing."
                   : paymentMethod === "skrill"
                   ? "Your order is confirmed! Please complete the payment via Skrill to nexmarketingslotion@gmail.com and send us the transaction screenshot or Transaction ID for quick processing."
