@@ -1,11 +1,10 @@
-
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { categories } from "@/lib/data";
 import { Link } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Package, Palette, Code, Layers, Plug, Zap, ArrowRight, Star } from "lucide-react";
+import { Package, Palette, Code, Layers, Plug, Zap, ArrowRight, Star, Download, Shield } from "lucide-react";
 
 // Icon mapping for categories with enhanced descriptions
 const categoryData = {
@@ -62,30 +61,38 @@ const categoryData = {
 
 const Categories = () => {
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50">
+    <div className="min-h-screen flex flex-col bg-white">
       <Navbar />
       <main className="flex-1">
-        {/* Hero Section */}
-        <section className="bg-gradient-to-br from-nex-600 via-nex-700 to-nex-800 text-white py-20 md:py-28">
-          <div className="container px-4 md:px-6 mx-auto">
-            <div className="max-w-4xl mx-auto text-center">
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
+        {/* Enhanced Hero Section */}
+        <section className="bg-gradient-to-br from-blue-600 via-purple-700 to-blue-800 text-white py-24 md:py-32 relative overflow-hidden">
+          <div className="absolute inset-0 bg-black/10"></div>
+          <div className="absolute inset-0 opacity-10">
+            <img 
+              src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"
+              alt="Technology background"
+              className="w-full h-full object-cover"
+            />
+          </div>
+          <div className="container px-4 md:px-6 mx-auto relative z-10">
+            <div className="max-w-5xl mx-auto text-center space-y-8">
+              <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-8 leading-tight">
                 Digital Product Categories
               </h1>
-              <p className="text-xl md:text-2xl mb-10 text-white/90 max-w-3xl mx-auto leading-relaxed">
-                Explore our comprehensive collection of digital assets across multiple niches
+              <p className="text-xl md:text-2xl mb-12 text-white/90 max-w-4xl mx-auto leading-relaxed">
+                Explore our comprehensive collection of premium digital assets across specialized categories, crafted by industry professionals
               </p>
-              <div className="flex flex-wrap justify-center gap-4 text-sm">
-                <div className="bg-white/20 backdrop-blur-sm px-6 py-3 rounded-full flex items-center space-x-2 hover:bg-white/25 transition-colors">
-                  <Star className="h-4 w-4" />
-                  <span>Premium Quality</span>
+              <div className="flex flex-wrap justify-center gap-6 text-base">
+                <div className="bg-white/20 backdrop-blur-sm px-6 py-3 rounded-full flex items-center space-x-3 hover:bg-white/25 transition-colors">
+                  <Star className="h-5 w-5" />
+                  <span>Premium Quality Guaranteed</span>
                 </div>
-                <div className="bg-white/20 backdrop-blur-sm px-6 py-3 rounded-full flex items-center space-x-2 hover:bg-white/25 transition-colors">
-                  <Package className="h-4 w-4" />
+                <div className="bg-white/20 backdrop-blur-sm px-6 py-3 rounded-full flex items-center space-x-3 hover:bg-white/25 transition-colors">
+                  <Download className="h-5 w-5" />
                   <span>Instant Download</span>
                 </div>
-                <div className="bg-white/20 backdrop-blur-sm px-6 py-3 rounded-full flex items-center space-x-2 hover:bg-white/25 transition-colors">
-                  <Zap className="h-4 w-4" />
+                <div className="bg-white/20 backdrop-blur-sm px-6 py-3 rounded-full flex items-center space-x-3 hover:bg-white/25 transition-colors">
+                  <Shield className="h-5 w-5" />
                   <span>Commercial License</span>
                 </div>
               </div>
@@ -93,58 +100,75 @@ const Categories = () => {
           </div>
         </section>
 
-        {/* Stats Section */}
-        <section className="py-16 bg-white border-b border-gray-200">
+        {/* Enhanced Stats Section */}
+        <section className="py-20 bg-gradient-to-br from-gray-50 to-blue-50 border-b border-gray-200">
           <div className="container px-4 md:px-6 mx-auto">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-              <div className="space-y-2">
-                <div className="text-4xl md:text-5xl font-bold text-nex-600">7</div>
-                <div className="text-sm text-gray-600 font-medium">Categories</div>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center max-w-4xl mx-auto">
+              <div className="space-y-4 group">
+                <div className="bg-gradient-to-br from-blue-500 to-purple-600 text-white p-4 rounded-2xl w-16 h-16 flex items-center justify-center mx-auto shadow-lg group-hover:shadow-xl group-hover:scale-110 transition-all duration-300">
+                  <Package className="h-8 w-8" />
+                </div>
+                <div className="text-4xl md:text-5xl font-bold text-gray-900">7</div>
+                <div className="text-lg font-semibold text-gray-600">Specialized Categories</div>
               </div>
-              <div className="space-y-2">
-                <div className="text-4xl md:text-5xl font-bold text-nex-600">785+</div>
-                <div className="text-sm text-gray-600 font-medium">Digital Products</div>
+              <div className="space-y-4 group">
+                <div className="bg-gradient-to-br from-green-500 to-teal-600 text-white p-4 rounded-2xl w-16 h-16 flex items-center justify-center mx-auto shadow-lg group-hover:shadow-xl group-hover:scale-110 transition-all duration-300">
+                  <Star className="h-8 w-8" />
+                </div>
+                <div className="text-4xl md:text-5xl font-bold text-gray-900">785+</div>
+                <div className="text-lg font-semibold text-gray-600">Premium Products</div>
               </div>
-              <div className="space-y-2">
-                <div className="text-4xl md:text-5xl font-bold text-nex-600">50K+</div>
-                <div className="text-sm text-gray-600 font-medium">Downloads</div>
+              <div className="space-y-4 group">
+                <div className="bg-gradient-to-br from-orange-500 to-red-600 text-white p-4 rounded-2xl w-16 h-16 flex items-center justify-center mx-auto shadow-lg group-hover:shadow-xl group-hover:scale-110 transition-all duration-300">
+                  <Download className="h-8 w-8" />
+                </div>
+                <div className="text-4xl md:text-5xl font-bold text-gray-900">50K+</div>
+                <div className="text-lg font-semibold text-gray-600">Happy Customers</div>
               </div>
-              <div className="space-y-2">
-                <div className="text-4xl md:text-5xl font-bold text-nex-600">99%</div>
-                <div className="text-sm text-gray-600 font-medium">Satisfaction</div>
+              <div className="space-y-4 group">
+                <div className="bg-gradient-to-br from-purple-500 to-pink-600 text-white p-4 rounded-2xl w-16 h-16 flex items-center justify-center mx-auto shadow-lg group-hover:shadow-xl group-hover:scale-110 transition-all duration-300">
+                  <Shield className="h-8 w-8" />
+                </div>
+                <div className="text-4xl md:text-5xl font-bold text-gray-900">99%</div>
+                <div className="text-lg font-semibold text-gray-600">Satisfaction Rate</div>
               </div>
             </div>
           </div>
         </section>
 
-        {/* Categories Grid */}
-        <section className="py-20 bg-gray-50">
+        {/* Enhanced Categories Grid */}
+        <section className="py-24 bg-white">
           <div className="container px-4 md:px-6 mx-auto">
-            <div className="text-center mb-16 space-y-4">
-              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900">Browse Our Categories</h2>
-              <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-                Discover the perfect digital assets for your next project across our specialized categories
+            <div className="text-center mb-20 space-y-6">
+              <h2 className="text-4xl md:text-5xl font-bold text-gray-900">Explore Our Categories</h2>
+              <p className="text-xl text-gray-600 max-w-4xl mx-auto leading-relaxed">
+                Each category features hand-picked, professional-grade digital assets designed to accelerate your creative workflow and business success
               </p>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-7xl mx-auto">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 max-w-7xl mx-auto">
               {categories.map((category) => {
                 const data = categoryData[category as keyof typeof categoryData];
                 const IconComponent = data.icon;
                 
                 return (
-                  <Card key={category} className="overflow-hidden hover:shadow-xl transition-all duration-300 group bg-white border-0 shadow-lg">
-                    <CardHeader className="pb-6">
+                  <Card key={category} className="overflow-hidden hover:shadow-2xl transition-all duration-500 group bg-gradient-to-br from-white to-gray-50/50 border-0 shadow-lg">
+                    <CardHeader className="pb-8 bg-gradient-to-br from-gray-50 to-white">
                       <div className="flex items-start justify-between">
                         <div className="flex items-center gap-6">
-                          <div className={`${data.color} p-4 rounded-xl text-white group-hover:scale-110 transition-transform duration-300 shadow-lg`}>
-                            <IconComponent className="h-8 w-8" />
+                          <div className={`${data.color} p-5 rounded-2xl text-white group-hover:scale-110 transition-transform duration-500 shadow-lg`}>
+                            <IconComponent className="h-10 w-10" />
                           </div>
-                          <div className="space-y-2">
+                          <div className="space-y-3">
                             <CardTitle className="text-2xl font-bold text-gray-900">{category}</CardTitle>
-                            <div className="flex items-center gap-2 text-sm text-gray-500">
+                            <div className="flex items-center gap-3 text-sm text-gray-500">
                               <Package className="h-4 w-4" />
-                              <span className="font-medium">{data.productCount} products</span>
+                              <span className="font-semibold">{data.productCount} premium products</span>
+                              <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
+                              <div className="flex items-center gap-1">
+                                <Star className="h-4 w-4 text-yellow-500 fill-current" />
+                                <span className="font-semibold">4.9/5</span>
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -152,17 +176,17 @@ const Categories = () => {
                     </CardHeader>
                     
                     <CardContent className="space-y-8 pb-8">
-                      <CardDescription className="text-gray-600 leading-relaxed text-base">
+                      <CardDescription className="text-gray-600 leading-relaxed text-lg">
                         {data.description}
                       </CardDescription>
                       
-                      <div className="space-y-4">
-                        <h4 className="font-semibold text-gray-900 text-lg">Key Features:</h4>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <div className="space-y-6">
+                        <h4 className="font-bold text-gray-900 text-lg">What's Included:</h4>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                           {data.features.map((feature, index) => (
-                            <div key={index} className="flex items-center gap-3 text-sm text-gray-700">
-                              <div className="w-2 h-2 bg-nex-600 rounded-full flex-shrink-0"></div>
-                              <span className="font-medium">{feature}</span>
+                            <div key={index} className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+                              <div className="w-2 h-2 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex-shrink-0"></div>
+                              <span className="font-medium text-gray-700">{feature}</span>
                             </div>
                           ))}
                         </div>
@@ -170,9 +194,9 @@ const Categories = () => {
                       
                       <div className="pt-6">
                         <Link to={`/products?category=${encodeURIComponent(category)}`}>
-                          <Button className="w-full bg-nex-600 hover:bg-nex-700 group py-6 text-base font-semibold rounded-lg shadow-md hover:shadow-lg transition-all duration-300">
-                            Browse {category}
-                            <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform duration-300" />
+                          <Button className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white group py-6 text-lg font-bold rounded-xl shadow-lg hover:shadow-xl transition-all duration-500">
+                            Explore {category}
+                            <ArrowRight className="ml-3 h-6 w-6 group-hover:translate-x-1 transition-transform duration-300" />
                           </Button>
                         </Link>
                       </div>
@@ -184,50 +208,50 @@ const Categories = () => {
           </div>
         </section>
 
-        {/* Why Choose Our Categories Section */}
-        <section className="py-20 bg-white">
+        {/* Enhanced Why Choose Section */}
+        <section className="py-24 bg-gradient-to-br from-gray-50 to-blue-50">
           <div className="container px-4 md:px-6 mx-auto">
-            <div className="max-w-6xl mx-auto">
-              <div className="text-center mb-16 space-y-4">
-                <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900">Why Choose Our Digital Products?</h2>
-                <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-                  Every product in our collection is carefully curated to meet professional standards
+            <div className="max-w-7xl mx-auto">
+              <div className="text-center mb-20 space-y-6">
+                <h2 className="text-4xl md:text-5xl font-bold text-gray-900">Why Choose NEX Digital?</h2>
+                <p className="text-xl text-gray-600 max-w-4xl mx-auto leading-relaxed">
+                  We're committed to delivering exceptional quality and unmatched value through every product in our curated marketplace
                 </p>
               </div>
               
               <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-                <div className="text-center space-y-6">
-                  <div className="bg-gradient-to-br from-nex-500 to-nex-700 text-white p-6 rounded-2xl w-20 h-20 flex items-center justify-center mx-auto shadow-lg">
-                    <Star className="h-10 w-10" />
+                <div className="text-center space-y-8 group">
+                  <div className="bg-gradient-to-br from-blue-500 to-purple-600 text-white p-8 rounded-3xl w-24 h-24 flex items-center justify-center mx-auto shadow-xl group-hover:shadow-2xl group-hover:scale-110 transition-all duration-500">
+                    <Star className="h-12 w-12" />
                   </div>
-                  <div className="space-y-3">
-                    <h3 className="text-2xl font-bold text-gray-900">Premium Quality</h3>
-                    <p className="text-gray-600 leading-relaxed">
-                      All products are tested and meet high-quality standards before being listed
+                  <div className="space-y-4">
+                    <h3 className="text-2xl font-bold text-gray-900">Premium Quality Guarantee</h3>
+                    <p className="text-gray-600 leading-relaxed text-lg">
+                      Every product undergoes rigorous testing and quality assurance to ensure professional standards and customer satisfaction
                     </p>
                   </div>
                 </div>
                 
-                <div className="text-center space-y-6">
-                  <div className="bg-gradient-to-br from-nex-500 to-nex-700 text-white p-6 rounded-2xl w-20 h-20 flex items-center justify-center mx-auto shadow-lg">
-                    <Zap className="h-10 w-10" />
+                <div className="text-center space-y-8 group">
+                  <div className="bg-gradient-to-br from-green-500 to-teal-600 text-white p-8 rounded-3xl w-24 h-24 flex items-center justify-center mx-auto shadow-xl group-hover:shadow-2xl group-hover:scale-110 transition-all duration-500">
+                    <Download className="h-12 w-12" />
                   </div>
-                  <div className="space-y-3">
-                    <h3 className="text-2xl font-bold text-gray-900">Instant Access</h3>
-                    <p className="text-gray-600 leading-relaxed">
-                      Download immediately after purchase with lifetime access to your files
+                  <div className="space-y-4">
+                    <h3 className="text-2xl font-bold text-gray-900">Instant Access & Updates</h3>
+                    <p className="text-gray-600 leading-relaxed text-lg">
+                      Download immediately after purchase with lifetime access and regular updates to keep your digital assets current
                     </p>
                   </div>
                 </div>
                 
-                <div className="text-center space-y-6">
-                  <div className="bg-gradient-to-br from-nex-500 to-nex-700 text-white p-6 rounded-2xl w-20 h-20 flex items-center justify-center mx-auto shadow-lg">
-                    <Package className="h-10 w-10" />
+                <div className="text-center space-y-8 group">
+                  <div className="bg-gradient-to-br from-orange-500 to-red-600 text-white p-8 rounded-3xl w-24 h-24 flex items-center justify-center mx-auto shadow-xl group-hover:shadow-2xl group-hover:scale-110 transition-all duration-500">
+                    <Shield className="h-12 w-12" />
                   </div>
-                  <div className="space-y-3">
-                    <h3 className="text-2xl font-bold text-gray-900">Commercial License</h3>
-                    <p className="text-gray-600 leading-relaxed">
-                      Use our products in your commercial projects without any restrictions
+                  <div className="space-y-4">
+                    <h3 className="text-2xl font-bold text-gray-900">Full Commercial License</h3>
+                    <p className="text-gray-600 leading-relaxed text-lg">
+                      Use our products in unlimited commercial projects without restrictions, additional fees, or attribution requirements
                     </p>
                   </div>
                 </div>
@@ -236,23 +260,39 @@ const Categories = () => {
           </div>
         </section>
 
-        {/* CTA Section */}
-        <section className="py-20 bg-gradient-to-br from-nex-600 via-nex-700 to-nex-800 text-white">
-          <div className="container px-4 md:px-6 mx-auto">
-            <div className="max-w-4xl mx-auto text-center space-y-8">
-              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight">
-                Ready to Find Your Perfect Digital Asset?
+        {/* Enhanced CTA Section */}
+        <section className="py-24 bg-gradient-to-br from-blue-600 via-purple-700 to-blue-800 text-white relative overflow-hidden">
+          <div className="absolute inset-0 bg-black/10"></div>
+          <div className="container px-4 md:px-6 mx-auto relative z-10">
+            <div className="max-w-5xl mx-auto text-center space-y-10">
+              <h2 className="text-4xl md:text-5xl font-bold leading-tight">
+                Ready to Transform Your Projects?
               </h2>
-              <p className="text-xl md:text-2xl text-white/90 max-w-3xl mx-auto leading-relaxed">
-                Browse through our extensive collection and find exactly what you need for your next project
+              <p className="text-xl md:text-2xl text-white/90 max-w-4xl mx-auto leading-relaxed">
+                Join thousands of satisfied customers who have elevated their creative work with our premium digital products and expert support
               </p>
-              <div className="pt-4">
-                <Link to="/products">
-                  <Button size="lg" variant="outline" className="bg-white text-nex-600 hover:bg-gray-100 py-6 px-8 text-lg font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-300">
-                    View All Products
+              <div className="flex flex-col sm:flex-row gap-6 justify-center pt-4">
+                <Button asChild size="lg" variant="outline" className="bg-white/10 border-2 border-white/30 text-white hover:bg-white hover:text-blue-600 transition-all duration-300 px-8 py-4 text-lg font-bold">
+                  <Link to="/products" className="inline-flex items-center">
+                    Browse All Products
                     <ArrowRight className="ml-3 h-6 w-6" />
-                  </Button>
-                </Link>
+                  </Link>
+                </Button>
+                <Button 
+                  asChild 
+                  size="lg" 
+                  className="bg-white text-blue-600 hover:bg-gray-100 transition-all duration-300 px-8 py-4 text-lg font-bold shadow-lg hover:shadow-xl"
+                >
+                  <a 
+                    href="https://www.fiverr.com/sellers/adnanerxterm/edit"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center"
+                  >
+                    Get Custom Solution
+                    <ArrowRight className="ml-3 h-6 w-6" />
+                  </a>
+                </Button>
               </div>
             </div>
           </div>
