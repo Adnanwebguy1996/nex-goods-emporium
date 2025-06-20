@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -8,7 +7,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Check, Edit, Link, Loader2, Search, Trash } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import ProductForm from "./ProductForm";
-import { products as initialProducts, type Product } from "@/lib/data";
+import { productService } from "@/lib/firebase/productService";
+import type { Product } from "@/lib/data";
 
 const ProductList = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -19,22 +19,22 @@ const ProductList = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [deletingProduct, setDeletingProduct] = useState<string | null>(null);
   
-  // Initialize products from localStorage or use initialProducts as fallback
+  // Load products from Firebase
   useEffect(() => {
-    try {
-      const storedProducts = localStorage.getItem("products");
-      if (storedProducts) {
-        setProducts(JSON.parse(storedProducts));
-      } else {
-        // If no products in localStorage, use initial data and save it
-        localStorage.setItem("products", JSON.stringify(initialProducts));
-        setProducts(initialProducts);
+    const loadProducts = async () => {
+      try {
+        setLoading(true);
+        const firebaseProducts = await productService.getAllProducts();
+        setProducts(firebaseProducts);
+      } catch (error) {
+        console.error("Error loading products:", error);
+        toast.error("Failed to load products");
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      console.error("Error loading products:", error);
-      setProducts(initialProducts);
-    }
-    setLoading(false);
+    };
+    
+    loadProducts();
   }, []);
   
   // Filter products based on search query
@@ -55,18 +55,13 @@ const ProductList = () => {
     setFilteredProducts(filtered);
   }, [products, searchQuery]);
   
-  // Handle product deletion
+  // Handle product deletion with Firebase
   const handleDeleteProduct = async (id: string) => {
     setDeletingProduct(id);
     
     try {
-      // Filter out the product to delete
+      await productService.deleteProduct(id);
       const updatedProducts = products.filter((product) => product.id !== id);
-      
-      // Update localStorage
-      localStorage.setItem("products", JSON.stringify(updatedProducts));
-      
-      // Update state
       setProducts(updatedProducts);
       toast.success("Product deleted successfully");
     } catch (error) {
@@ -83,12 +78,14 @@ const ProductList = () => {
     setEditingProduct(null);
   };
   
-  // Handle edit success
-  const handleEditSuccess = () => {
-    // Refresh product list from localStorage
-    const storedProducts = localStorage.getItem("products");
-    if (storedProducts) {
-      setProducts(JSON.parse(storedProducts));
+  // Handle edit success with Firebase refresh
+  const handleEditSuccess = async () => {
+    try {
+      const updatedProducts = await productService.getAllProducts();
+      setProducts(updatedProducts);
+    } catch (error) {
+      console.error("Error refreshing products:", error);
+      toast.error("Failed to refresh products");
     }
     
     setIsDialogOpen(false);
