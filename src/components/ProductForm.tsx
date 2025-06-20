@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -8,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Check, Loader2, Upload, Link } from "lucide-react";
 import { categories, type Product } from "@/lib/data";
+import { sanitizeInput, sanitizeNumber, sanitizeUrl, validateFormData } from "@/utils/inputSanitizer";
 import {
   Select,
   SelectContent,
@@ -54,7 +54,19 @@ const ProductForm = ({ editProduct, onSuccess }: ProductFormProps) => {
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    
+    // Sanitize input based on field type
+    let sanitizedValue = value;
+    
+    if (name === 'title' || name === 'description' || name === 'fileType' || name === 'fileSize') {
+      sanitizedValue = sanitizeInput(value);
+    } else if (name === 'price') {
+      sanitizedValue = sanitizeNumber(parseFloat(value)).toString();
+    } else if (name === 'image' || name === 'externalLink') {
+      sanitizedValue = sanitizeUrl(value);
+    }
+    
+    setFormData((prev) => ({ ...prev, [name]: sanitizedValue }));
   };
   
   const handleSwitchChange = (checked: boolean) => {
@@ -100,9 +112,10 @@ const ProductForm = ({ editProduct, onSuccess }: ProductFormProps) => {
     e.preventDefault();
     setIsSubmitting(true);
     
-    // Validate form
-    if (!formData.title || !formData.description || formData.price <= 0) {
-      toast.error("Please fill in all required fields");
+    // Validate form data
+    const validation = validateFormData(formData);
+    if (!validation.isValid) {
+      validation.errors.forEach(error => toast.error(error));
       setIsSubmitting(false);
       return;
     }
@@ -120,20 +133,26 @@ const ProductForm = ({ editProduct, onSuccess }: ProductFormProps) => {
       return;
     }
     
+    // Sanitize all form data before saving
+    const sanitizedFormData = {
+      ...formData,
+      title: sanitizeInput(formData.title),
+      description: sanitizeInput(formData.description),
+      price: sanitizeNumber(formData.price),
+      fileType: sanitizeInput(formData.fileType),
+      fileSize: sanitizeInput(formData.fileSize),
+      externalLink: sanitizeUrl(formData.externalLink),
+      image: sanitizeUrl(formData.image) || "/placeholder.svg"
+    };
+    
     // If external link is active, clear file data
     if (activeTab === "external") {
-      setFormData(prev => ({
-        ...prev,
-        fileUrl: "",
-        fileType: "",
-        fileSize: ""
-      }));
+      sanitizedFormData.fileUrl = "";
+      sanitizedFormData.fileType = "";
+      sanitizedFormData.fileSize = "";
     } else {
       // If upload is active, clear external link
-      setFormData(prev => ({
-        ...prev,
-        externalLink: ""
-      }));
+      sanitizedFormData.externalLink = "";
     }
     
     // Save to localStorage (in a real app, this would save to a database)
@@ -147,13 +166,13 @@ const ProductForm = ({ editProduct, onSuccess }: ProductFormProps) => {
       if (isEditing) {
         // Update product
         const updatedProducts = existingProducts.map((p: Product) => 
-          p.id === formData.id ? formData : p
+          p.id === sanitizedFormData.id ? sanitizedFormData : p
         );
         localStorage.setItem("products", JSON.stringify(updatedProducts));
         toast.success("Product updated successfully");
       } else {
         // Add new product
-        const newProducts = [...existingProducts, formData];
+        const newProducts = [...existingProducts, sanitizedFormData];
         localStorage.setItem("products", JSON.stringify(newProducts));
         toast.success("Product added successfully");
       }
@@ -201,6 +220,7 @@ const ProductForm = ({ editProduct, onSuccess }: ProductFormProps) => {
               value={formData.title}
               onChange={handleChange}
               placeholder="Enter product name"
+              maxLength={100}
               required
             />
           </div>
@@ -213,6 +233,7 @@ const ProductForm = ({ editProduct, onSuccess }: ProductFormProps) => {
               type="number"
               step="0.01"
               min="0"
+              max="99999"
               value={formData.price}
               onChange={handleChange}
               placeholder="29.99"
@@ -229,6 +250,7 @@ const ProductForm = ({ editProduct, onSuccess }: ProductFormProps) => {
             value={formData.description}
             onChange={handleChange}
             placeholder="Describe your product..."
+            maxLength={1000}
             rows={4}
             required
           />
