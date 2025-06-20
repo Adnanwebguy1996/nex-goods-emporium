@@ -149,23 +149,6 @@ const ProductDetail = () => {
                         <Share className="mr-2 h-5 w-5" /> Share
                       </Button>
                     </div>
-                    
-                    <Button 
-                      asChild 
-                      variant="outline" 
-                      size="lg"
-                      className="border-2 border-blue-200 text-blue-600 hover:bg-blue-50 py-4 text-lg font-semibold"
-                    >
-                      <a 
-                        href="https://www.fiverr.com/sellers/adnanerxterm/edit"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center"
-                      >
-                        Need Custom Work?
-                        <ArrowLeft className="ml-2 h-5 w-5 rotate-180" />
-                      </a>
-                    </Button>
                   </div>
                 </div>
               </div>

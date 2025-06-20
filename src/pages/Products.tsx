@@ -6,7 +6,7 @@ import Footer from "@/components/Footer";
 import ProductCard from "@/components/ProductCard";
 import { products, categories } from "@/lib/data";
 import { Button } from "@/components/ui/button";
-import { Check, ChevronDown, ArrowRight, Star, Filter } from "lucide-react";
+import { Check, ChevronDown, Star, Filter } from "lucide-react";
 import { 
   DropdownMenu, 
   DropdownMenuContent, 
@@ -234,32 +234,6 @@ const Products = () => {
               </div>
             </div>
           )}
-
-          {/* CTA Section */}
-          <section className="mt-20 bg-gradient-to-br from-blue-600 to-purple-600 rounded-2xl p-12 text-white text-center">
-            <div className="max-w-3xl mx-auto space-y-6">
-              <h2 className="text-3xl md:text-4xl font-bold">Need Something Custom?</h2>
-              <p className="text-xl text-white/90">
-                Can't find exactly what you're looking for? Let our expert team create a custom solution tailored to your specific needs.
-              </p>
-              <Button 
-                asChild 
-                size="lg" 
-                variant="outline" 
-                className="bg-white/10 border-2 border-white/30 text-white hover:bg-white hover:text-blue-600 transition-all duration-300"
-              >
-                <a 
-                  href="https://www.fiverr.com/sellers/adnanerxterm/edit"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center"
-                >
-                  Get Custom Solution
-                  <ArrowRight className="ml-2 h-5 w-5" />
-                </a>
-              </Button>
-            </div>
-          </section>
         </div>
       </main>
       <Footer />

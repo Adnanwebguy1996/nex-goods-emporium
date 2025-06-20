@@ -187,7 +187,7 @@ const Index = () => {
           </div>
         </section>
         
-        {/* Enhanced CTA Section */}
+        {/* Newsletter Signup Section */}
         <section className="py-24 bg-gradient-to-br from-blue-600 via-purple-700 to-blue-800 text-white relative overflow-hidden">
           <div className="absolute inset-0 bg-black/10"></div>
           <div className="absolute inset-0 opacity-10">
@@ -213,24 +213,6 @@ const Index = () => {
                 />
                 <Button className="bg-white text-blue-600 hover:bg-gray-100 px-8 py-4 rounded-xl font-bold shadow-lg hover:shadow-xl transition-all duration-300 text-lg">
                   Get Started
-                </Button>
-              </div>
-              <div className="pt-6">
-                <Button 
-                  asChild 
-                  variant="outline" 
-                  size="lg" 
-                  className="border-2 border-white/30 bg-white/10 backdrop-blur text-white hover:bg-white hover:text-blue-600 transition-all duration-300 px-8 py-4 text-lg font-semibold"
-                >
-                  <a 
-                    href="https://www.fiverr.com/sellers/adnanerxterm/edit"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center"
-                  >
-                    Get Custom Solutions
-                    <ArrowRight className="ml-2 h-5 w-5" />
-                  </a>
                 </Button>
               </div>
               <p className="text-sm text-white/70 mt-6">

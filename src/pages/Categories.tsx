@@ -1,3 +1,4 @@
+
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { categories } from "@/lib/data";
@@ -260,7 +261,7 @@ const Categories = () => {
           </div>
         </section>
 
-        {/* Enhanced CTA Section */}
+        {/* Browse Products CTA Section */}
         <section className="py-24 bg-gradient-to-br from-blue-600 via-purple-700 to-blue-800 text-white relative overflow-hidden">
           <div className="absolute inset-0 bg-black/10"></div>
           <div className="container px-4 md:px-6 mx-auto relative z-10">
@@ -271,27 +272,12 @@ const Categories = () => {
               <p className="text-xl md:text-2xl text-white/90 max-w-4xl mx-auto leading-relaxed">
                 Join thousands of satisfied customers who have elevated their creative work with our premium digital products and expert support
               </p>
-              <div className="flex flex-col sm:flex-row gap-6 justify-center pt-4">
+              <div className="flex justify-center pt-4">
                 <Button asChild size="lg" variant="outline" className="bg-white/10 border-2 border-white/30 text-white hover:bg-white hover:text-blue-600 transition-all duration-300 px-8 py-4 text-lg font-bold">
                   <Link to="/products" className="inline-flex items-center">
                     Browse All Products
                     <ArrowRight className="ml-3 h-6 w-6" />
                   </Link>
-                </Button>
-                <Button 
-                  asChild 
-                  size="lg" 
-                  className="bg-white text-blue-600 hover:bg-gray-100 transition-all duration-300 px-8 py-4 text-lg font-bold shadow-lg hover:shadow-xl"
-                >
-                  <a 
-                    href="https://www.fiverr.com/sellers/adnanerxterm/edit"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center"
-                  >
-                    Get Custom Solution
-                    <ArrowRight className="ml-3 h-6 w-6" />
-                  </a>
                 </Button>
               </div>
             </div>
