@@ -75,7 +75,7 @@ const VisitorTracker: React.FC = () => {
   }, []);
 
   const activeVisitors = visitors.filter(v => {
-    const lastActive = v.lastActive?.toDate ? v.lastActive.toDate() : new Date(v.lastActive);
+    const lastActive = v.lastActive.toDate();
     return new Date().getTime() - lastActive.getTime() < 300000; // Active in last 5 minutes
   }).length;
 
@@ -160,7 +160,7 @@ const VisitorTracker: React.FC = () => {
               </TableHeader>
               <TableBody>
                 {visitors.map((visitor) => {
-                  const lastActive = visitor.lastActive?.toDate ? visitor.lastActive.toDate() : new Date(visitor.lastActive);
+                  const lastActive = visitor.lastActive.toDate();
                   const isActive = new Date().getTime() - lastActive.getTime() < 300000;
                   
                   return (
