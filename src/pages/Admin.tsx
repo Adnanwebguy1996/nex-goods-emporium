@@ -9,31 +9,30 @@ import ProductForm from "@/components/ProductForm";
 import ProductList from "@/components/ProductList";
 import VisitorTracker from "@/components/VisitorTracker";
 import VisitorHeatmap from "@/components/VisitorHeatmap";
+import AdminSetup from "@/components/AdminSetup";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { LogIn, Lock, Users, MapPin } from "lucide-react";
+import { LogIn, Lock, Users, MapPin, Loader2 } from "lucide-react";
+import { authService, type AdminUser } from "@/lib/firebase/authService";
 
-// Mock authentication - in a real app, use proper auth like Supabase
+// Firebase-based authentication component
 const AdminAuth = () => {
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoggingIn, setIsLoggingIn] = useState(false);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoggingIn(true);
     
-    // Mock authentication - replace with real auth system
-    setTimeout(() => {
-      if (username === "admin" && password === "password") {
-        localStorage.setItem("isAdmin", "true");
-        window.location.reload();
-        toast.success("Logged in successfully");
-      } else {
-        toast.error("Invalid credentials");
-      }
-      setIsLoggingIn(false);
-    }, 1000);
+    try {
+      await authService.signInAdmin(email, password);
+      toast.success("Logged in successfully");
+    } catch (error: any) {
+      toast.error(error.message || "Failed to log in");
+    }
+    
+    setIsLoggingIn(false);
   };
 
   return (
@@ -49,21 +48,21 @@ const AdminAuth = () => {
             </div>
             <CardTitle className="text-2xl text-center">Admin Login</CardTitle>
             <CardDescription className="text-center">
-              Enter your credentials to access the admin panel
+              Sign in with your admin credentials
             </CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleLogin} className="space-y-4">
               <div className="space-y-2">
-                <label htmlFor="username" className="text-sm font-medium">
-                  Username
+                <label htmlFor="email" className="text-sm font-medium">
+                  Email
                 </label>
                 <Input
-                  id="username"
-                  type="text"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  placeholder="Enter admin username"
+                  id="email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Enter your email"
                   required
                 />
               </div>
@@ -77,7 +76,7 @@ const AdminAuth = () => {
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Enter password"
+                  placeholder="Enter your password"
                   required
                 />
               </div>
@@ -88,7 +87,10 @@ const AdminAuth = () => {
                 disabled={isLoggingIn}
               >
                 {isLoggingIn ? (
-                  "Signing in..."
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Signing in...
+                  </>
                 ) : (
                   <>
                     <LogIn className="mr-2 h-4 w-4" /> Sign in
@@ -97,11 +99,6 @@ const AdminAuth = () => {
               </Button>
             </form>
           </CardContent>
-          <CardFooter>
-            <p className="text-xs text-center text-muted-foreground w-full">
-              Demo credentials: admin / password
-            </p>
-          </CardFooter>
         </Card>
       </div>
       <Footer />
@@ -110,21 +107,60 @@ const AdminAuth = () => {
 };
 
 const Admin = () => {
-  const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
+  const [currentAdmin, setCurrentAdmin] = useState<AdminUser | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [needsSetup, setNeedsSetup] = useState(false);
   
   useEffect(() => {
-    // Check if user is admin from localStorage
-    const adminStatus = localStorage.getItem("isAdmin") === "true";
-    setIsAdmin(adminStatus);
+    // Listen to auth state changes
+    const unsubscribe = authService.onAuthStateChanged((admin) => {
+      setCurrentAdmin(admin);
+      setLoading(false);
+    });
+    
+    // Check if setup is needed (no super admin exists)
+    const checkSetup = async () => {
+      const hasSuperAdmin = await authService.hasSuperAdmin();
+      if (!hasSuperAdmin && !currentAdmin) {
+        setNeedsSetup(true);
+      }
+      setLoading(false);
+    };
+    
+    checkSetup();
+    
+    return () => unsubscribe();
   }, []);
   
+  const handleSignOut = async () => {
+    try {
+      await authService.signOutAdmin();
+      toast.success("Signed out successfully");
+    } catch (error: any) {
+      toast.error(error.message || "Failed to sign out");
+    }
+  };
+  
+  const handleSetupComplete = () => {
+    setNeedsSetup(false);
+  };
+  
   // Show loading state while checking auth
-  if (isAdmin === null) {
-    return <div className="flex min-h-screen items-center justify-center">Loading...</div>;
+  if (loading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin" />
+      </div>
+    );
+  }
+  
+  // Show setup if needed
+  if (needsSetup) {
+    return <AdminSetup onSetupComplete={handleSetupComplete} />;
   }
   
   // If not admin, show login page
-  if (!isAdmin) {
+  if (!currentAdmin) {
     return <AdminAuth />;
   }
   
@@ -138,15 +174,16 @@ const Admin = () => {
             <div>
               <h1 className="text-3xl font-bold">Admin Dashboard</h1>
               <p className="text-muted-foreground mt-1">
-                Manage your product catalog and monitor visitor activity
+                Welcome back, {currentAdmin.displayName}! Manage your store and monitor activity.
               </p>
+              <div className="flex items-center gap-2 mt-2">
+                <span className="text-sm text-muted-foreground">Role:</span>
+                <span className="text-sm font-medium capitalize">{currentAdmin.role.replace('_', ' ')}</span>
+              </div>
             </div>
             <Button
               variant="outline"
-              onClick={() => {
-                localStorage.removeItem("isAdmin");
-                window.location.reload();
-              }}
+              onClick={handleSignOut}
               className="mt-4 md:mt-0"
             >
               Sign Out
