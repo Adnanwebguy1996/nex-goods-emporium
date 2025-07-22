@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Cell } from "recharts";
 import { MapPin } from "lucide-react";
+import { visitorService } from "@/lib/firebase/visitorService";
 
 interface PageView {
   page: string;
@@ -53,21 +54,89 @@ pages.forEach(page => {
 });
 
 const VisitorHeatmap: React.FC = () => {
-  const [heatmapData, setHeatmapData] = useState<PageView[]>(mockHeatmapData);
+  const [heatmapData, setHeatmapData] = useState<PageView[]>([]);
+  const [loading, setLoading] = useState(true);
   
-  // In a real app, we would update this data from a server
   useEffect(() => {
-    const interval = setInterval(() => {
-      setHeatmapData(prev => 
-        prev.map(item => ({
-          ...item,
-          views: item.views + (Math.random() > 0.7 ? Math.floor(Math.random() * 3) : 0)
-        }))
-      );
-    }, 10000);
+    const generateHeatmapFromVisitors = async () => {
+      try {
+        // Get real visitor data from Firebase
+        const unsubscribe = visitorService.subscribeToVisitors((visitors) => {
+          // Process visitor data into heatmap format
+          const pageMap = new Map<string, Map<number, number>>();
+          
+          visitors.forEach(visitor => {
+            const hour = visitor.lastActive.toDate().getHours();
+            const page = visitor.page;
+            
+            if (!pageMap.has(page)) {
+              pageMap.set(page, new Map());
+            }
+            
+            const pageHours = pageMap.get(page)!;
+            pageHours.set(hour, (pageHours.get(hour) || 0) + 1);
+          });
+          
+          // Convert to heatmap data format
+          const newHeatmapData: PageView[] = [];
+          const allPages = Array.from(pageMap.keys());
+          
+          allPages.forEach(page => {
+            const pageHours = pageMap.get(page)!;
+            for (let hour = 0; hour < 24; hour++) {
+              newHeatmapData.push({
+                page,
+                hour,
+                views: pageHours.get(hour) || 0
+              });
+            }
+          });
+          
+          // If no visitor data, show some sample pages with zero views
+          if (newHeatmapData.length === 0) {
+            const samplePages = ["/", "/products", "/cart", "/checkout"];
+            samplePages.forEach(page => {
+              for (let hour = 0; hour < 24; hour++) {
+                newHeatmapData.push({
+                  page,
+                  hour,
+                  views: 0
+                });
+              }
+            });
+          }
+          
+          setHeatmapData(newHeatmapData);
+          setLoading(false);
+        });
+        
+        return () => unsubscribe();
+      } catch (error) {
+        console.error("Error loading visitor heatmap data:", error);
+        setLoading(false);
+      }
+    };
     
-    return () => clearInterval(interval);
+    generateHeatmapFromVisitors();
   }, []);
+
+  if (loading) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-2xl font-bold flex items-center">
+            <MapPin className="mr-2 h-6 w-6" /> 
+            Visitor Activity Heatmap
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="flex justify-center items-center h-64">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
 
   const formatHour = (hour: number) => {
     if (hour === 0) return "12am";
@@ -76,14 +145,15 @@ const VisitorHeatmap: React.FC = () => {
   };
   
   const getIntensityColor = (views: number) => {
-    if (views > 30) return "#ef4444";
-    if (views > 20) return "#f97316";
-    if (views > 10) return "#facc15";
-    if (views > 5) return "#84cc16";
+    if (views > 10) return "#ef4444";
+    if (views > 7) return "#f97316";
+    if (views > 4) return "#facc15";
+    if (views > 1) return "#84cc16";
     return "#22c55e";
   };
 
   // Transform data for each page into chart format
+  const pages = [...new Set(heatmapData.map(item => item.page))];
   const chartData = pages.map(page => {
     const pageData = heatmapData.filter(item => item.page === page);
     return {
@@ -140,23 +210,23 @@ const VisitorHeatmap: React.FC = () => {
         <div className="mt-6 flex items-center justify-center space-x-4 text-sm">
           <div className="flex items-center space-x-2">
             <div className="w-3 h-3 rounded" style={{ backgroundColor: "#22c55e" }}></div>
-            <span>Low (1-5)</span>
+            <span>Low (0-1)</span>
           </div>
           <div className="flex items-center space-x-2">
             <div className="w-3 h-3 rounded" style={{ backgroundColor: "#84cc16" }}></div>
-            <span>Medium (6-10)</span>
+            <span>Medium (2-4)</span>
           </div>
           <div className="flex items-center space-x-2">
             <div className="w-3 h-3 rounded" style={{ backgroundColor: "#facc15" }}></div>
-            <span>High (11-20)</span>
+            <span>High (5-7)</span>
           </div>
           <div className="flex items-center space-x-2">
             <div className="w-3 h-3 rounded" style={{ backgroundColor: "#f97316" }}></div>
-            <span>Very High (21-30)</span>
+            <span>Very High (8-10)</span>
           </div>
           <div className="flex items-center space-x-2">
             <div className="w-3 h-3 rounded" style={{ backgroundColor: "#ef4444" }}></div>
-            <span>Peak (30+)</span>
+            <span>Peak (10+)</span>
           </div>
         </div>
       </CardContent>

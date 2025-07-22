@@ -8,6 +8,7 @@ import { Switch } from "@/components/ui/switch";
 import { Check, Loader2, Upload, Link } from "lucide-react";
 import { categories, type Product } from "@/lib/data";
 import { sanitizeInput, sanitizeNumber, sanitizeUrl, validateFormData } from "@/utils/inputSanitizer";
+import { productService } from "@/lib/firebase/productService";
 import {
   Select,
   SelectContent,
@@ -108,7 +109,7 @@ const ProductForm = ({ editProduct, onSuccess }: ProductFormProps) => {
     else return (bytes / 1048576).toFixed(1) + ' MB';
   };
   
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
     
@@ -155,25 +156,15 @@ const ProductForm = ({ editProduct, onSuccess }: ProductFormProps) => {
       sanitizedFormData.externalLink = "";
     }
     
-    // Save to localStorage (in a real app, this would save to a database)
+    // Save to Firebase
     try {
-      // Get existing products
-      const existingProductsJSON = localStorage.getItem("products");
-      const existingProducts = existingProductsJSON 
-        ? JSON.parse(existingProductsJSON) 
-        : [];
-      
       if (isEditing) {
-        // Update product
-        const updatedProducts = existingProducts.map((p: Product) => 
-          p.id === sanitizedFormData.id ? sanitizedFormData : p
-        );
-        localStorage.setItem("products", JSON.stringify(updatedProducts));
+        // Update product in Firebase
+        await productService.updateProduct(sanitizedFormData.id, sanitizedFormData);
         toast.success("Product updated successfully");
       } else {
-        // Add new product
-        const newProducts = [...existingProducts, sanitizedFormData];
-        localStorage.setItem("products", JSON.stringify(newProducts));
+        // Add new product to Firebase
+        await productService.addProduct(sanitizedFormData);
         toast.success("Product added successfully");
       }
       
