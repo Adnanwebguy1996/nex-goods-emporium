@@ -126,7 +126,9 @@ export const visitorService = {
       return sessionId;
     } catch (error) {
       console.error('Error tracking visitor:', error);
-      throw error;
+      // Don't throw error - allow app to continue working
+      const fallbackSessionId = localStorage.getItem('visitor_session_id') || generateSessionId();
+      return fallbackSessionId;
     }
   },
 
@@ -154,22 +156,31 @@ export const visitorService = {
 
   // Subscribe to real-time visitor updates
   subscribeToVisitors(callback: (visitors: VisitorData[]) => void) {
-    const fifteenMinutesAgo = new Date(Date.now() - 15 * 60 * 1000);
-    
-    const q = query(
-      collection(db, VISITORS_COLLECTION),
-      where('lastActive', '>=', Timestamp.fromDate(fifteenMinutesAgo)),
-      orderBy('lastActive', 'desc')
-    );
-    
-    return onSnapshot(q, (snapshot) => {
-      const visitors = snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      })) as VisitorData[];
+    try {
+      const fifteenMinutesAgo = new Date(Date.now() - 15 * 60 * 1000);
       
-      callback(visitors);
-    });
+      const q = query(
+        collection(db, VISITORS_COLLECTION),
+        where('lastActive', '>=', Timestamp.fromDate(fifteenMinutesAgo)),
+        orderBy('lastActive', 'desc')
+      );
+      
+      return onSnapshot(q, (snapshot) => {
+        const visitors = snapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        })) as VisitorData[];
+        
+        callback(visitors);
+      }, (error) => {
+        console.error('Error in visitor subscription:', error);
+        callback([]); // Return empty array on error
+      });
+    } catch (error) {
+      console.error('Error setting up visitor subscription:', error);
+      callback([]);
+      return () => {}; // Return empty unsubscribe function
+    }
   },
 
   // Update visitor's current page
@@ -194,7 +205,10 @@ export const visitorService = {
         });
       }
     } catch (error) {
-      console.error('Error updating visitor page:', error);
+      // Silently handle permission errors - don't log to console repeatedly
+      if (error.code !== 'permission-denied') {
+        console.error('Error updating visitor page:', error);
+      }
     }
   }
 };
