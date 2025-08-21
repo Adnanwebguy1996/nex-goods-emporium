@@ -78,6 +78,11 @@ const getApproximateLocation = (): { location: string; countryCode: string } => 
 export const visitorService = {
   // Track a new visitor or update existing session
   async trackVisitor(page: string): Promise<string> {
+    // Temporarily disabled to avoid Firebase permission errors
+    const sessionId = localStorage.getItem('visitor_session_id') || generateSessionId();
+    localStorage.setItem('visitor_session_id', sessionId);
+    return sessionId;
+    
     try {
       let sessionId = localStorage.getItem('visitor_session_id');
       
@@ -185,6 +190,9 @@ export const visitorService = {
 
   // Update visitor's current page
   async updateVisitorPage(page: string): Promise<void> {
+    // Temporarily disabled to avoid Firebase permission errors
+    return;
+    
     try {
       const sessionId = localStorage.getItem('visitor_session_id');
       if (!sessionId) return;
