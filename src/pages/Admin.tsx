@@ -112,24 +112,18 @@ const Admin = () => {
   const [needsSetup, setNeedsSetup] = useState(false);
   
   useEffect(() => {
-    // Listen to auth state changes
-    const unsubscribe = authService.onAuthStateChanged((admin) => {
-      setCurrentAdmin(admin);
-      setLoading(false);
-    });
-    
-    // Check if setup is needed (no super admin exists)
-    const checkSetup = async () => {
-      const hasSuperAdmin = await authService.hasSuperAdmin();
-      if (!hasSuperAdmin && !currentAdmin) {
-        setNeedsSetup(true);
-      }
-      setLoading(false);
+    // Temporarily bypass auth - set a mock admin user
+    const mockAdmin = {
+      uid: 'temp-admin',
+      email: 'admin@temp.com',
+      displayName: 'Temporary Admin',
+      role: 'super_admin' as const,
+      createdAt: new Date(),
+      lastLogin: new Date()
     };
     
-    checkSetup();
-    
-    return () => unsubscribe();
+    setCurrentAdmin(mockAdmin);
+    setLoading(false);
   }, []);
   
   const handleSignOut = async () => {
